@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dynamic.student.dao.StudentDAO">
+
+    <resultMap id="baseResultPO" type="com.example.dynamic.entity.student.domain.StudentPO">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="age" property="age" jdbcType="INTEGER" />
+        <result column="sex" property="sex" jdbcType="TINYINT" />
+    </resultMap>
+
+    <sql id="selectAll">
+        <choose>
+            <when test="selectFields != null">
+                <trim suffixOverrides=",">
+                    <foreach collection="selectFields" item="selectField">
+                        ${selectField},
+                    </foreach>
+                </trim>
+            </when>
+            <otherwise>*</otherwise>
+        </choose>
+    </sql>
+
+    <sql id="setAll">
+        <set>
+            <if test="setParams.name != null">`name`=#{setParams.name},</if>
+            <if test="setParams.age != null">`age`=#{setParams.age},</if>
+            <if test="setParams.sex != null">`sex`=#{setParams.sex},</if>
+        </set>
+    </sql>
+
+    <sql id="whereAll">
+        <where>
+            <if test="whereParams.id != null">AND `id`=#{whereParams.id}</if>
+            <if test="whereParams.name != null">AND `name`=#{whereParams.name}</if>
+            <if test="whereParams.age != null">AND `age`=#{whereParams.age}</if>
+            <if test="whereParams.sex != null">AND `sex`=#{whereParams.sex}</if>
+        </where>
+    </sql>
+    <sql id="sortAll">
+        <if test="whereParams.sortBy != null and whereParams.sortBy != '' and whereParams.direction != null and whereParams.direction != ''">
+            order by ${whereParams.sortBy} ${whereParams.direction}, id
+        </if>
+    </sql>
+    <sql id="pagingAll">
+        <if test="pageParams != null and pageParams.offset != null and pageParams.limit != null">
+            limit #{pageParams.offset}, #{pageParams.limit}
+        </if>
+    </sql>
+
+
+</mapper>
