@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -28,28 +29,22 @@ import java.util.List;
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan(value = "com.example.dynamic.**.dao", sqlSessionFactoryRef = "masterSessionFactory")
-public class MasterSessionFactoryConfig {
+public class MybatisPlusConifg {
 
-    @Value("${mybatis-plus.mapper-locations}")
-    private Resource[] locations;
-    @Value("${mybatis-plus.config-location}")
-    private String configLocation;
 
-    @Bean("masterDataSource")
-    @ConfigurationProperties("spring.datasource.dynamic.datasource.master")
-    public DataSource slaveDataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
+//    @Bean("masterDataSource")
+//    @ConfigurationProperties("spring.datasource.dynamic.datasource.master")
+//    public DataSource masterDataSource() {
+//        return DruidDataSourceBuilder.create().build();
+//    }
 
-    @Bean
-    MybatisSqlSessionFactoryBean masterSessionFactory(@Qualifier("masterDataSource") DataSource dataSource) throws Exception {
-        MybatisSqlSessionFactoryBean mybatisPlus = new MybatisSqlSessionFactoryBean();
-        mybatisPlus.setDataSource(dataSource);
-        mybatisPlus.setMapperLocations(locations);
-        mybatisPlus.setPlugins(masterPaginationInterceptor());
-        return mybatisPlus;
-    }
+//    @Bean
+//    MybatisSqlSessionFactoryBean masterSessionFactory(@Qualifier("masterDataSource") DataSource dataSource) throws Exception {
+//        MybatisSqlSessionFactoryBean mybatisPlus = new MybatisSqlSessionFactoryBean();
+//        mybatisPlus.setDataSource(dataSource);
+//        mybatisPlus.setPlugins(masterPaginationInterceptor());
+//        return mybatisPlus;
+//    }
 
 
     @Bean
@@ -69,7 +64,7 @@ public class MasterSessionFactoryConfig {
         // 设置请求的页面大于最大页后操作， true调回到首页，false 继续请求  默认false
         // paginationInterceptor.setOverflow(false);
         // 设置最大单页限制数量，默认 500 条，-1 不受限制
-        paginationInterceptor.setLimit(500);
+        paginationInterceptor.setLimit(3);
         // 开启 count 的 join 优化,只针对部分 left join
         paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
         List<ISqlParser> sqlParserList = new ArrayList<>();
@@ -95,9 +90,5 @@ public class MasterSessionFactoryConfig {
                 super.processUpdate(update);
             }
         };
-    }
-    @Bean("masterTransactionManager")
-    public PlatformTransactionManager masterTransactionManager(@Qualifier("masterDataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
     }
 }
