@@ -70,14 +70,6 @@ class DynamicApplicationTests {
         page.getRecords().stream().map(Student::getName).forEach(System.out::println);
     }
 
-    @Test
-    void testTransactional() {
-        try {
-            webService.testTransactional();
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Test
     void testAop() {
@@ -102,4 +94,87 @@ class DynamicApplicationTests {
         System.out.println("写库查询name： " + masterStudent.getName());
 
     }
+
+
+
+    /**
+     * 两条插入事务
+     */
+    @Test
+    void testTransactional() {
+        try {
+            webService.testSaveTransactional();
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * get from slave
+     */
+    @Test
+    void testGetBySlave() {
+        studentService.getById(27);
+    }
+
+    /**
+     * 先插入在查询无事务注解
+     */
+    @Test
+    void testSaveAndGet() {
+        try {
+            webService.testSaveAndGet("lanTx2");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 先插入在查询有事务注解
+     */
+    @Test
+    void testSaveAndGetTransactional() {
+        try {
+            webService.testSaveAndGetTransactional("lanTx2");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 先插入在查询无事务注解
+     */
+    @Test
+    void testGetAndSave() {
+        try {
+            webService.testGetAndSave(27, "lan27");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * 先插入在查询有事务注解
+     */
+    @Test
+    void testGetAndSaveTransactional() {
+        try {
+            webService.testGetAndSaveTransactional(27, "lan27");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 相同内容方法名不同
+     * 先插入在查询有事务注解
+     */
+    @Test
+    void testListGetAndSaveTransactional() {
+        try {
+            webService.listGetAndSaveTransactional(33, "lanCc");
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

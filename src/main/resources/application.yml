@@ -7,14 +7,14 @@ spring:
       strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
       datasource:
         master:
-          url: jdbc:mysql://152.136.45.47:3306/write?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-          username: root
-          password: 123456
+          url: jdbc:mysql://152.136.45.47:3306/write?characterEncoding=utf-8
+          username: ENC(VZamSTMi224AH6RUtJGXNldiDp/XEL2ozRhBUu/o9ChodT4JEb9kE/j0EFhXKbjsfvLVacUW0AUzetA6OrNJug==)
+          password: ENC(Y3ycHCcZGa+N+OK+qXTWA0gJ1L1N+FYrswTgRQEegdKVTefiujYxjlytR6zOuV5Y3AifL/P10yWshYKQaqpkkQ==)
           driver-class-name: com.mysql.jdbc.Driver
         slave:
-          url: jdbc:mysql://152.136.45.47:3306/read?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
-          username: root
-          password: 123456
+          url: jdbc:mysql://152.136.45.47:3306/read?characterEncoding=utf-8
+          username: ENC(VZamSTMi224AH6RUtJGXNldiDp/XEL2ozRhBUu/o9ChodT4JEb9kE/j0EFhXKbjsfvLVacUW0AUzetA6OrNJug==)
+          password: ENC(Y3ycHCcZGa+N+OK+qXTWA0gJ1L1N+FYrswTgRQEegdKVTefiujYxjlytR6zOuV5Y3AifL/P10yWshYKQaqpkkQ==)
           driver-class-name: com.mysql.jdbc.Driver
 mybatis-plus:
   type-aliases-package: com.dongpingyun.domain

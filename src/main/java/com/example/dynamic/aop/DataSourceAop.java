@@ -12,6 +12,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Method;
 
@@ -30,7 +31,9 @@ public class DataSourceAop {
 
     private static final String SLAVE = "slave";
 
-    @Pointcut("execution(* com.example.dynamic.service..*.*(..)) || execution(* com.baomidou.mybatisplus.extension.service..*.*(..))")
+    @Pointcut(" execution(* com.example.dynamic.service..*.*(..)) " +
+            "|| execution(* com.baomidou.mybatisplus.extension.service..*.*(..)) " +
+            "|| @annotation(org.springframework.transaction.annotation.Transactional)")
     public void checkArgs() {
     }
 
@@ -43,12 +46,21 @@ public class DataSourceAop {
             //获取类上注解
             return;
         }
-
+        if (clazz.isAnnotationPresent(Transactional.class)) {
+            log.info("当前执行的库：" + MASTER);
+            DynamicDataSourceContextHolder.push(MASTER);
+            return;
+        }
         String targetName = clazz.getSimpleName();
         Class[] parameterTypes =
                 ((MethodSignature) joinPoint.getSignature()).getMethod().getParameterTypes();
         Method methdo = clazz.getMethod(methodName, parameterTypes);
         if (methdo.isAnnotationPresent(DS.class)) {
+            return;
+        }
+        if (methdo.isAnnotationPresent(Transactional.class)) {
+            log.info("当前执行的库：" + MASTER);
+            DynamicDataSourceContextHolder.push(MASTER);
             return;
         }
         if (methodName.startsWith("get")
